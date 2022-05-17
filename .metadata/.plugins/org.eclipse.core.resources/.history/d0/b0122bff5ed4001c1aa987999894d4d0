@@ -1,0 +1,5 @@
+package com.xoriant.ecart.resource;
+
+public class BrandController {
+
+}

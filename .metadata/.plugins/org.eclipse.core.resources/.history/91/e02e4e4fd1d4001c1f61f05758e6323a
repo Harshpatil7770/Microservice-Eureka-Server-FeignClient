@@ -1,0 +1,42 @@
+package com.xoriant.ecart.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.xoriant.ecart.dao.ProductDao;
+import com.xoriant.ecart.exception.UserInputException;
+import com.xoriant.ecart.model.Product;
+
+@Service
+public class ProductServiceImpl implements ProductService {
+
+	@Autowired
+	private ProductDao productDao;
+
+	@Override
+	public Product addNewProduct(Product product) {
+
+		if (product.getProductName().isEmpty() || product.getProductName().isBlank()
+				|| product.getProductName().length() == 0) {
+			throw new UserInputException();
+		}
+
+		if (product.getPrice() < 0) {
+			throw new UserInputException();
+		}
+
+		if (product.getDescription().isEmpty() || product.getDescription().isBlank()
+				|| product.getDescription().length() == 0) {
+			throw new UserInputException();
+		}
+
+		if (product.getQuantity() < 0) {
+			throw new UserInputException();
+		}
+
+		return productDao.save(product);
+	}
+	
+	
+
+}

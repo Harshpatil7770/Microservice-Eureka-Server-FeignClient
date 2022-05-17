@@ -1,0 +1,71 @@
+package com.xoriant.ecart.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.xoriant.ecart.model.Product;
+
+@FeignClient(name = "product-service")
+public interface ProductServiceProxy {
+	
+	
+	@PostMapping("/save")
+	public String addNewProduct(@RequestBody Product product);
+
+	@PostMapping("/saveAll")
+	List<Product> addNewListofProduct(@RequestBody List<Product> prodLists);
+
+
+	@PutMapping("/update")
+	Product updateProduct(@RequestBody Product product) {
+	}
+
+	@PutMapping("/updateAll")
+	List<Product> updateProductLists(@RequestBody List<Product> prodLists) {
+
+	@GetMapping("/{productId}")
+	Optional<Product> findById(@PathVariable int productId) {
+
+	@GetMapping("find/{productName}")
+	Optional<Product> findByProductName(@PathVariable String productName) {
+	}
+
+	@GetMapping("/findAll")
+	List<Product> fetchAll() {
+		return productService.fetchAll();
+	}
+
+	@GetMapping("/findAll/sorted")
+	List<Product> fetchByAlphabeticalOrder() {
+		return productService.fetchByAlphabeticalOrder();
+	}
+
+	@DeleteMapping("/{productId}")
+	void deleteProduct(@PathVariable int productId) {
+		productService.deleteProduct(productId);
+	}
+
+	@GetMapping("/minPrice/{minPrice}")
+	List<Product> findByPriceLessThan(@PathVariable double minPrice) {
+		return productService.findByPriceLessThan(minPrice);
+	}
+
+	@GetMapping("find/price/{maxPrice}")
+	List<Product> findByPriceGreaterThan(@PathVariable double maxPrice) {
+		return productService.findByPriceGreaterThan(maxPrice);
+	}
+
+	@GetMapping("find/{minPrice}/{maxPrice}")
+	List<Product> findByPriceIsBetween(@PathVariable double minPrice, @PathVariable double maxPrice) {
+		return productService.findByPriceIsBetween(minPrice, maxPrice);
+	}
+
+}

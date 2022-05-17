@@ -1,0 +1,14 @@
+spring.application.name=brand-service
+#spring.cloud.config.uri=http://localhost:8888
+server.port=9091
+spring.datasource.url=jdbc:h2:file:D:/h2db/microservice
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=password
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.id.new_generator_mappings = false
+spring.jpa.properties.hibernate.format_sql = true
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE

@@ -1,0 +1,33 @@
+package com.xoriant.ecart.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import com.xoriant.ecart.model.Product;
+
+public interface ProductService {
+
+	Product addNewProduct(Product product);
+
+	List<Product> addNewListofProduct(List<Product> prodLists);
+
+	Product updateProduct(Product product);
+
+	List<Product> updateProductLists(List<Product> prodLists);
+
+	Optional<Product> findById(int productId);
+
+	Optional<Product> findByProductName(String productName);
+
+	List<Product> fetchAll();
+
+	List<Product> fetchByAlphabeticalOrder();
+
+	void deleteProduct(int productId);
+
+	List<Product> findByPriceLessThan(double minPrice);
+
+	List<Product> findByPriceGreaterThan(Double maxPrice);
+
+	List<Product> findByPriceIsBetween(double minPrice, double maxPrice);
+}

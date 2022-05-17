@@ -1,0 +1,229 @@
+package com.xoriant.ecart.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.xoriant.ecart.dao.ProductDao;
+import com.xoriant.ecart.exception.ElementNotFoundException;
+import com.xoriant.ecart.exception.UserInputException;
+import com.xoriant.ecart.model.Product;
+
+@Service
+public class ProductServiceImpl implements ProductService {
+
+	@Autowired
+	private ProductDao productDao;
+
+	@Override
+	public Product addNewProduct(Product product) {
+
+		if (product.getProductName().isEmpty() || product.getProductName().isBlank()
+				|| product.getProductName().length() == 0) {
+			throw new UserInputException();
+		}
+
+		if (product.getPrice() < 0) {
+			throw new UserInputException();
+		}
+
+		if (product.getDescription().isEmpty() || product.getDescription().isBlank()
+				|| product.getDescription().length() == 0) {
+			throw new UserInputException();
+		}
+
+		if (product.getQuantity() < 0) {
+			throw new UserInputException();
+		}
+
+		return productDao.save(product);
+	}
+
+	@Override
+	public List<Product> addNewListofProduct(List<Product> prodLists) {
+		for (Product eachNewProduct : prodLists) {
+
+			if (eachNewProduct.getProductName().isEmpty() || eachNewProduct.getProductName().isBlank()
+					|| eachNewProduct.getProductName().length() == 0) {
+				throw new UserInputException();
+			}
+
+			if (eachNewProduct.getPrice() < 0) {
+				throw new UserInputException();
+			}
+
+			if (eachNewProduct.getDescription().isEmpty() || eachNewProduct.getDescription().isBlank()
+					|| eachNewProduct.getDescription().length() == 0) {
+				throw new UserInputException();
+			}
+
+			if (eachNewProduct.getQuantity() < 0) {
+				throw new UserInputException();
+			}
+		}
+		return productDao.saveAll(prodLists);
+	}
+
+	@Override
+	public Product updateProduct(Product product) {
+
+		Optional<Product> isExistProduct = productDao.findById(product.getProductId());
+		if (!isExistProduct.isPresent()) {
+			throw new ElementNotFoundException();
+		}
+
+		if (product.getProductName().isEmpty() || product.getProductName().isBlank()
+				|| product.getProductName().length() == 0) {
+			throw new UserInputException();
+		}
+
+		if (product.getPrice() < 0) {
+			throw new UserInputException();
+		}
+
+		if (product.getDescription().isEmpty() || product.getDescription().isBlank()
+				|| product.getDescription().length() == 0) {
+			throw new UserInputException();
+		}
+
+		if (product.getQuantity() < 0) {
+			throw new UserInputException();
+		}
+
+		Product updateProduct = productDao.findById(product.getProductId()).orElse(null);
+		updateProduct.setProductId(product.getProductId());
+		updateProduct.setProductName(product.getProductName());
+		updateProduct.setPrice(product.getPrice());
+		updateProduct.setDescription(product.getDescription());
+		updateProduct.setQuantity(product.getQuantity());
+		return productDao.save(product);
+	}
+
+	@Override
+	public List<Product> updateProductLists(List<Product> prodLists) {
+
+		List<Product> updatedProductLists = new ArrayList<Product>();
+		for (Product isProductExist : prodLists) {
+
+			Optional<Product> eachProduct = productDao.findById(isProductExist.getProductId());
+			if (!eachProduct.isPresent()) {
+				throw new ElementNotFoundException();
+			}
+		}
+
+		for (Product eachNewProduct : prodLists) {
+
+			if (eachNewProduct.getProductName().isEmpty() || eachNewProduct.getProductName().isBlank()
+					|| eachNewProduct.getProductName().length() == 0) {
+				throw new UserInputException();
+			}
+
+			if (eachNewProduct.getPrice() < 0) {
+				throw new UserInputException();
+			}
+
+			if (eachNewProduct.getDescription().isEmpty() || eachNewProduct.getDescription().isBlank()
+					|| eachNewProduct.getDescription().length() == 0) {
+				throw new UserInputException();
+			}
+
+			if (eachNewProduct.getQuantity() < 0) {
+				throw new UserInputException();
+			}
+		}
+
+		for (Product updatedProduct : prodLists) {
+
+			Product existProdcut = productDao.findById(updatedProduct.getProductId()).orElse(null);
+			existProdcut.setProductId(updatedProduct.getProductId());
+			existProdcut.setProductName(updatedProduct.getProductName());
+			existProdcut.setPrice(updatedProduct.getPrice());
+			existProdcut.setDescription(updatedProduct.getDescription());
+			existProdcut.setQuantity(updatedProduct.getQuantity());
+			productDao.save(updatedProduct);
+			updatedProductLists.add(existProdcut);
+		}
+
+		return updatedProductLists;
+	}
+
+	@Override
+	public Optional<Product> findById(int productId) {
+		Optional<Product> isExistProduct = productDao.findById(productId);
+		if (!isExistProduct.isPresent()) {
+			throw new ElementNotFoundException();
+		}
+		return isExistProduct;
+	}
+
+	@Override
+	public Optional<Product> findByProductName(String productName) {
+		Optional<Product> isExistProduct = productDao.findByProductName(productName);
+		if (!isExistProduct.isPresent()) {
+			throw new ElementNotFoundException();
+		}
+		return isExistProduct;
+	}
+
+	@Override
+	public List<Product> fetchAll() {
+		List<Product> prodLists = productDao.findAll();
+		if (prodLists == null) {
+			throw new ElementNotFoundException();
+		}
+		return prodLists;
+	}
+
+	@Override
+	public List<Product> fetchByAlphabeticalOrder() {
+		List<Product> prodLists = productDao.findAll();
+		if (prodLists == null) {
+			throw new ElementNotFoundException();
+		}
+
+		List<Product> aplhabeticalSorted = prodLists.stream()
+				.sorted((o1, o2) -> o1.getProductName().compareTo(o2.getProductName())).collect(Collectors.toList());
+		return aplhabeticalSorted;
+	}
+
+	@Override
+	public void deleteProduct(int productId) {
+		Optional<Product> isExistProduct = productDao.findById(productId);
+		if (!isExistProduct.isPresent()) {
+			throw new ElementNotFoundException();
+		}
+		productDao.deleteById(productId);
+	}
+
+	@Override
+	public List<Product> findByPriceLessThan(double minPrice) {
+		List<Product> prodLists = productDao.findByPriceLessThan(minPrice);
+		if (prodLists == null) {
+			throw new ElementNotFoundException();
+		}
+		return prodLists;
+	}
+
+	@Override
+	public List<Product> findByPriceGreaterThan(Double maxPrice) {
+		List<Product> prodLists = productDao.findByPriceGreaterThan(maxPrice);
+		if (prodLists == null) {
+			throw new ElementNotFoundException();
+		}
+		return prodLists;
+	}
+
+	@Override
+	public List<Product> findByPriceIsBetween(double minPrice, double maxPrice) {
+		List<Product> prodLists = productDao.findByPriceIsBetween(minPrice, maxPrice);
+		if (prodLists == null) {
+			throw new ElementNotFoundException();
+		}
+		return prodLists;
+	}
+
+}

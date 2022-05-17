@@ -1,0 +1,94 @@
+package com.xoriant.ecart.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.xoriant.ecart.dao.BrandDao;
+import com.xoriant.ecart.exception.ElementNotFoundException;
+import com.xoriant.ecart.exception.UserInputException;
+import com.xoriant.ecart.model.Brand;
+
+@Service
+public class BrandServiceImpl implements BrandService {
+
+	@Autowired
+	private BrandDao brandDao;
+
+	@Override
+	public Brand addNewBrand(Brand brand) {
+		if (brand.getBrandName().isBlank() || brand.getBrandName().isEmpty() || brand.getBrandName().length() == 0) {
+			throw new UserInputException();
+		}
+		return brandDao.save(brand);
+	}
+
+	@Override
+	public List<Brand> addNewListOfBrands(List<Brand> brandLists) {
+		for (Brand newBrand : brandLists) {
+			if (newBrand.getBrandName().isBlank() || newBrand.getBrandName().isEmpty()
+					|| newBrand.getBrandName().length() == 0) {
+				throw new UserInputException();
+			}
+		}
+		return brandDao.saveAll(brandLists);
+	}
+
+	@Override
+	public Brand updateBrand(Brand brand) {
+		Optional<Brand> isExistBrand = brandDao.findById(brand.getBrandId());
+		if (!isExistBrand.isPresent()) {
+			throw new ElementNotFoundException();
+		}
+
+		Brand updateBrand = brandDao.findById(brand.getBrandId()).orElse(null);
+
+		updateBrand.setBrandId(brand.getBrandId());
+		if (updateBrand.getBrandName().isBlank() || updateBrand.getBrandName().isEmpty()
+				|| updateBrand.getBrandName().length() == 0) {
+			throw new UserInputException();
+		}
+		updateBrand.setBrandName(brand.getBrandName());
+		return brandDao.save(brand);
+
+	}
+
+	@Override
+	public Brand findByBrandName(String brandName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Optional<Brand> findById(int brandId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Brand> fetchAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Brand> fetchAllAlphabeticalOrder() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Brand> updateListsOfBrand(List<Brand> brandLists) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteBrand(int brandId) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

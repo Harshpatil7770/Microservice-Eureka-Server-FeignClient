@@ -1,0 +1,5 @@
+package com.xoriant.ecart.dao;
+
+public interface BrandDao {
+
+}
